@@ -6,5 +6,6 @@
  {registered,[log4erl]},
  {applications, [kernel,stdlib]},
  {mod, {log4erl,[]}},
+ {modules, []},
  {start_phases, []}
 ]}.

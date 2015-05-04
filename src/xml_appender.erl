@@ -64,7 +64,7 @@ init({Dir, Fname, {Type, Max}, Rot, Suf, Level, Spec} = _Conf) ->
                 #xml_spec{name=N, format=Tokens, type=T}
             end, Spec),
 
-    %% Start xml 
+    %% Start xml
     file:write(Fd, "<?xml>\n<log4erl>"),
 
     State = #xml_appender{dir = Dir, file_name = Fname, fd = Fd, counter=0,
@@ -151,7 +151,7 @@ rotate(#xml_appender{fd = Fd, dir=Dir,  file_name=Fn, counter=Cntr, rotation=Rot
     {ok, State2}.
 
 % Check if the file needs to be rotated
-% ignore in case of if log type is set to time instead of size        
+% ignore in case of if log type is set to time instead of size
 check_rotation(State) ->
     #xml_appender{dir=Dir, file_name=Fname, log_type = #log_type{type=T, max=Max}, suffix=Suf} = State,
     case T of

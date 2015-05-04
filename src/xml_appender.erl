@@ -45,7 +45,7 @@ init({Dir, Fname, {Type, Max}, Rot, Suf, Level, Spec} = _Conf) ->
     ?LOG2("xml_appender:init() - 1 ~p~n",[_Conf]),
     File = Dir ++ "/" ++ Fname ++ "." ++ Suf,
     Ltype = #log_type{type = Type, max = Max},
-    % Check Rot >= 0
+    %% Check Rot >= 0
     Rot1 = case Rot < 0 of
                true ->
                    0;
@@ -68,7 +68,7 @@ init({Dir, Fname, {Type, Max}, Rot, Suf, Level, Spec} = _Conf) ->
                            level=Level, xmlspec=XmlSpec},
     ?LOG2("xml_appender:init() with conf ~p~n",[State]),
     {ok, State};
-% These 2 are for result of reading conf file
+%% These 2 are for result of reading conf file
 init({Dir, Fname, Type, Max, Rot, Suf, Level, Spec}) ->
     init({to_list(Dir), to_list(Fname), {to_atom(Type), to_int(Max)}, to_int(Rot), to_list(Suf), to_atom(Level), Spec}).
 

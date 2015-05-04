@@ -64,8 +64,8 @@ init({Dir, Fname, {Type, Max}, Rot, Suf, Level, Spec} = _Conf) ->
     file:write(Fd, "<?xml>\n<log4erl>"),
 
     State = #xml_appender{dir = Dir, file_name = Fname, fd = Fd, counter=0,
-                           log_type = Ltype, rotation = Rot1, suffix=Suf,
-                           level=Level, xmlspec=XmlSpec},
+                          log_type = Ltype, rotation = Rot1, suffix=Suf,
+                          level=Level, xmlspec=XmlSpec},
     ?LOG2("xml_appender:init() with conf ~p~n",[State]),
     {ok, State};
 %% These 2 are for result of reading conf file

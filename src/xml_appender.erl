@@ -8,13 +8,13 @@
 -import(log4erl_utils, [to_list/1, to_atom/1, to_int/1]).
 
 %% gen_event callbacks
--export([init/1, handle_event/2, handle_call/2, 
-	 handle_info/2, terminate/2, code_change/3]).
+-export([init/1, handle_event/2, handle_call/2,
+         handle_info/2, terminate/2, code_change/3]).
 
 -define(DEFAULT_XMLSPEC, [{level, "%L", att},
-			  {date, "%j", att},
-			  {time, "%T", att},
-			  {message, "%l", elem}]).
+                          {date, "%j", att},
+                          {time, "%T", att},
+                          {message, "%l", elem}]).
 
 %% xmlspec is a list of xml_spec records
 -record(xml_appender, {dir, file_name, fd, counter, log_type, rotation, suffix="xml", level, xmlspec}).
@@ -30,16 +30,16 @@
 %%======================================
 init({conf, Conf}) when is_list(Conf) ->
     CL = lists:foldl(fun(X, List) ->
-			     case X of
-				 {X1, D} ->
-				     [proplists:get_value(X1,Conf,D)|List];
-				 _ ->
-				     [proplists:get_value(X,Conf)|List]
-			     end
-		     end,
-		     [],
-		     [dir, file, type, max, rotation, suffix, level, {xmlspec, ?DEFAULT_XMLSPEC}]),
-    
+                             case X of
+                                 {X1, D} ->
+                                     [proplists:get_value(X1,Conf,D)|List];
+                                 _ ->
+                                     [proplists:get_value(X,Conf)|List]
+                             end
+                     end,
+                     [],
+                     [dir, file, type, max, rotation, suffix, level, {xmlspec, ?DEFAULT_XMLSPEC}]),
+
     init(list_to_tuple(lists:reverse(CL)));
 init({Dir, Fname, {Type, Max}, Rot, Suf, Level, Spec} = _Conf) ->
     ?LOG2("xml_appender:init() - 1 ~p~n",[_Conf]),
@@ -47,25 +47,25 @@ init({Dir, Fname, {Type, Max}, Rot, Suf, Level, Spec} = _Conf) ->
     Ltype = #log_type{type = Type, max = Max},
     % Check Rot >= 0
     Rot1 = case Rot < 0 of
-	       true ->
-		   0;
-	       false ->
-		   Rot
-	   end,
+               true ->
+                   0;
+               false ->
+                   Rot
+           end,
     {ok, Fd} = file:open(File, ?FILE_OPTIONS),
 
     %% Translate {Name, Format, Type} to #xml_spec records
     XmlSpec = lists:map(fun({N, F, T}) ->
-				{ok, Tokens} = log_formatter:parse(F),
-				#xml_spec{name=N, format=Tokens, type=T}
-			end, Spec),
+                                {ok, Tokens} = log_formatter:parse(F),
+                                #xml_spec{name=N, format=Tokens, type=T}
+                        end, Spec),
 
-    %% Start xml 
+    %% Start xml
     file:write(Fd, "<?xml>\n<log4erl>"),
 
     State = #xml_appender{dir = Dir, file_name = Fname, fd = Fd, counter=0,
-			   log_type = Ltype, rotation = Rot1, suffix=Suf,
-			   level=Level, xmlspec=XmlSpec},
+                           log_type = Ltype, rotation = Rot1, suffix=Suf,
+                           level=Level, xmlspec=XmlSpec},
     ?LOG2("xml_appender:init() with conf ~p~n",[State]),
     {ok, State};
 % These 2 are for result of reading conf file
@@ -116,11 +116,11 @@ code_change(_OldVsn, State, _Extra) ->
 do_log(#log{level = L} = Log,#xml_appender{fd = Fd, level=Level, xmlspec=XmlSpec} = _State) when is_atom(L) ->
     ToLog = log4erl_utils:to_log(L, Level),
     case ToLog of
-	true ->
-	    M = format_xml(Log, XmlSpec),
-	    file:write(Fd, M);
-	false ->
-	    ok
+        true ->
+            M = format_xml(Log, XmlSpec),
+            file:write(Fd, M);
+        false ->
+            ok
     end;
 do_log(_Other, _State) ->
     ?LOG2("unknown level ~p~n",[_Other]),
@@ -131,20 +131,20 @@ rotate(#xml_appender{fd = Fd, dir=Dir,  file_name=Fn, counter=Cntr, rotation=Rot
     file:close(Fd),
     ?LOG("Starting rotation~n"),
     C = if
-	    Rot == 0 ->
-		0;
-	    Cntr >= Rot ->
-		1;
-	    true ->
-		Cntr+1
-	end,
+            Rot == 0 ->
+                0;
+            Cntr >= Rot ->
+                1;
+            true ->
+                Cntr+1
+        end,
     Src = Dir ++ "/" ++ Fn ++ "." ++ Suf,
     Fname = case C of
-		0 ->
-		    Dir ++ "/" ++ Fn ++ "." ++ Suf;
-		_ ->
-		    Dir ++ "/" ++ Fn ++ "_" ++ integer_to_list(C) ++ "." ++ Suf
-	    end,
+                0 ->
+                    Dir ++ "/" ++ Fn ++ "." ++ Suf;
+                _ ->
+                    Dir ++ "/" ++ Fn ++ "_" ++ integer_to_list(C) ++ "." ++ Suf
+            end,
     ?LOG2("Renaming file from ~p to ~p~n",[Src, Fname]),
     file:rename(Src, Fname),
     {ok ,Fd2} = file:open(Src, ?FILE_OPTIONS_ROTATE),
@@ -153,35 +153,35 @@ rotate(#xml_appender{fd = Fd, dir=Dir,  file_name=Fn, counter=Cntr, rotation=Rot
     {ok, State2}.
 
 % Check if the file needs to be rotated
-% ignore in case of if log type is set to time instead of size	    
+% ignore in case of if log type is set to time instead of size
 check_rotation(State) ->
     #xml_appender{dir=Dir, file_name=Fname, log_type = #log_type{type=T, max=Max}, suffix=Suf} = State,
     case T of
-	size ->
-	    File = Dir ++ "/" ++ Fname ++  "." ++ Suf,
-	    {ok, Finfo} = file:read_file_info(File),
-	    Size = Finfo#file_info.size,
-	    if
-		Size > Max ->
-		    {ok, State2} = rotate(State),
-		    State2;
-		true ->
-		    State
-	    end;
-	%% time-based rotation is not implemented yet
-	_ ->
-	    State
+        size ->
+            File = Dir ++ "/" ++ Fname ++  "." ++ Suf,
+            {ok, Finfo} = file:read_file_info(File),
+            Size = Finfo#file_info.size,
+            if
+                Size > Max ->
+                    {ok, State2} = rotate(State),
+                    State2;
+                true ->
+                    State
+            end;
+        %% time-based rotation is not implemented yet
+        _ ->
+            State
     end.
 
 format_xml(Log, Spec) ->
     Att = lists:filter(fun(#xml_spec{type=T}) ->
-			       T == att
-		       end,
-		       Spec),
+                               T == att
+                       end,
+                       Spec),
     Elems = lists:filter(fun(#xml_spec{type=T}) ->
-				 T == elem
-			 end,
-			 Spec),
+                                 T == elem
+                         end,
+                         Spec),
 
     A = attributes(Log, Att),
     B = elements(Log, Elems),

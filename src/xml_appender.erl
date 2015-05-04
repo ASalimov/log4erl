@@ -72,7 +72,7 @@ init({Dir, Fname, {Type, Max}, Rot, Suf, Level, Spec} = _Conf) ->
                level=Level, xmlspec=XmlSpec},
     ?LOG2("xml_appender:init() with conf ~p~n",[State]),
     {ok, State};
-% These 2 are for result of reading conf file
+%% These 2 are for result of reading conf file
 init({Dir, Fname, Type, Max, Rot, Suf, Level, Spec}) ->
     init({to_list(Dir), to_list(Fname), {to_atom(Type), to_int(Max)}, to_int(Rot), to_list(Suf), to_atom(Level), Spec}).
 
@@ -150,8 +150,8 @@ rotate(#xml_appender{fd = Fd, dir=Dir,  file_name=Fn, counter=Cntr, rotation=Rot
     State2 = S#xml_appender{dir = Dir, file_name = Fn, fd = Fd2, rotation = Rot, suffix=Suf},
     {ok, State2}.
 
-% Check if the file needs to be rotated
-% ignore in case of if log type is set to time instead of size
+%% Check if the file needs to be rotated
+%% ignore in case of if log type is set to time instead of size
 check_rotation(State) ->
     #xml_appender{dir=Dir, file_name=Fname, log_type = #log_type{type=T, max=Max}, suffix=Suf} = State,
     case T of

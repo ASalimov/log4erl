@@ -152,8 +152,8 @@ rotate(#xml_appender{fd = Fd, dir=Dir,  file_name=Fn, counter=Cntr, rotation=Rot
     State2 = S#xml_appender{dir = Dir, file_name = Fn, fd = Fd2, rotation = Rot, suffix=Suf},
     {ok, State2}.
 
-% Check if the file needs to be rotated
-% ignore in case of if log type is set to time instead of size
+%% Check if the file needs to be rotated
+%% ignore in case of if log type is set to time instead of size
 check_rotation(State) ->
     #xml_appender{dir=Dir, file_name=Fname, log_type = #log_type{type=T, max=Max}, suffix=Suf} = State,
     case T of

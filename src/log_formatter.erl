@@ -161,7 +161,12 @@ get_token_value(millis, Log) ->
 get_token_value(log, Log) ->
     Msg = Log#log.msg,
     Data = Log#log.data,
-    io_lib:format(Msg, Data);
+    try
+      io_lib:format(Msg, Data)
+    catch E:R->
+      error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
+      []
+    end;
 get_token_value(level, Log) ->
     atom_to_list(Log#log.level);
 get_token_value(new_line, _Log) ->

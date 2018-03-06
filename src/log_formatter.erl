@@ -162,14 +162,8 @@ get_token_value(log, Log) ->
     Msg = Log#log.msg,
     Data = Log#log.data,
     try
-      R2 = lager_format:format(Msg, Data,100),
-      error_logger:error_msg("log4erl, lager_format:format error ~p", [R2])
-    catch E1:R1->
-      error_logger:error_msg("log4erl, lager_format:format error ~p ~p ~p ~p", [E1,R1, Msg, Data]),
-      []
-    end,
-    try
-      io_lib:format(Msg, Data)
+%%      io_lib:format(Msg, Data)
+      lager_format:format(Msg, Data,100)
     catch E:R->
       error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
       []

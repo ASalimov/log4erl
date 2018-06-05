@@ -164,7 +164,7 @@ get_token_value(log, Log) ->
     try
 %%      io_lib:format(Msg, Data)
 
-     Rspp =  lager_format:format(Msg, Data,700000),
+     Rspp =  lager_format:format(Msg, Data,7000),
      error_logger:error_msg("~p", [Rspp]),
        Rspp
     catch E:R->

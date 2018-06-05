@@ -180,7 +180,7 @@ get_token_value(log, Log) ->
           error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
           []
         end
-    end
+    end;
 
 get_token_value(level, Log) ->
     atom_to_list(Log#log.level);

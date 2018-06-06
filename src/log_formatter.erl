@@ -163,7 +163,7 @@ get_token_value(log, Log) ->
   Data = Log#log.data,
   try
    lager_format:format(Msg, Data,10000)
-  catch
+  catch E:R->
     error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
     []
   end;

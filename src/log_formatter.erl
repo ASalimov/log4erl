@@ -174,7 +174,7 @@ get_token_value(log, Log) ->
       Data = Log#log.data,
       try
         Rspp =  lager_format:format(Msg, Data,70000),
-        error_logger:error_msg("dd ~p", [Rspp]),
+        error_logger:error_msg("dd1 ~p, msg = ~p, data = ~p", [Rspp, Msg, Data]),
         Rspp
       catch E:R->
         error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),

@@ -88,7 +88,6 @@ handle_event({change_level, Level}, State) ->
     {ok, State2};
 handle_event({log,LLog}, State) ->
     ?LOG2("handl_event:log = ~p~n",[LLog]),
-    error_logger:error_msg("dd2 ~ ~p", [LLog, State]),
     do_log(LLog, State),
     Res = check_rotation(State),
     {ok, Res}.

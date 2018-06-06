@@ -160,26 +160,33 @@ get_token_value(millis, Log) ->
   log4erl_utils:return_Ncolumns(integer_to_list(Ms), 3);
 get_token_value(log, Log) ->
   Msg = Log#log.msg,
-  case Msg of
-    "dd ~p"->
-      Data = Log#log.data,
-      try
-        Rspp =  lager_format:format(Msg, Data,70000),
-        Rspp
-      catch E:R->
-        error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
-        []
-      end;
-    _->
-      Data = Log#log.data,
-      try
-        Rspp =  lager_format:format(Msg, Data,7000),
-        error_logger:error_msg("dd ~p", [Rspp]),
-        Rspp
-      catch E:R->
-        error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
-        []
-      end
+%%  case Msg of
+%%    "dd ~p"->
+%%      Data = Log#log.data,
+%%      try
+%%        Rspp =  lager_format:format(Msg, Data,70000),
+%%        Rspp
+%%      catch E:R->
+%%        error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
+%%        []
+%%      end;
+%%    _->
+%%      Data = Log#log.data,
+%%      try
+%%        Rspp =  lager_format:format(Msg, Data,7000),
+%%        error_logger:error_msg("dd ~p", [Rspp]),
+%%        Rspp
+%%      catch E:R->
+%%        error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
+%%        []
+%%      end
+%%  end;
+  Data = Log#log.data,
+  try
+    io_lib:format(Msg, Data)
+  catch E:R->
+    error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
+    []
   end;
 
 get_token_value(level, Log) ->

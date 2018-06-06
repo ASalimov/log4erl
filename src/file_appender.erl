@@ -138,6 +138,7 @@ do_log(#log{level = L} = Log,#file_appender{fd = Fd, level=Level, format=Format}
     case ToLog of
 	true ->
 	    M = log_formatter:format(Log, Format),
+%%    added unicode:characters_to_binary. it  fixed an error "Bad value on output port 'efile'"
 	    file:write(Fd, unicode:characters_to_binary(M));
 	false ->
 	    ok

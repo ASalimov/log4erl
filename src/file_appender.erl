@@ -138,7 +138,7 @@ do_log(#log{level = L} = Log,#file_appender{fd = Fd, level=Level, format=Format}
     case ToLog of
 	true ->
 	    M = log_formatter:format(Log, Format),
-	    file:write(Fd, M);
+	    file:write(Fd, unicode:characters_to_binary(M));
 	false ->
 	    ok
     end;

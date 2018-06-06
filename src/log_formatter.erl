@@ -160,26 +160,12 @@ get_token_value(millis, Log) ->
   log4erl_utils:return_Ncolumns(integer_to_list(Ms), 3);
 get_token_value(log, Log) ->
   Msg = Log#log.msg,
-  case Msg of
-    "dd ~p"->
-      Data = Log#log.data,
-      try
-        Rspp =  lager_format:format("aa "++ Msg, Data,70000),
-        Rspp
-      catch E:R->
-        error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
-        []
-      end;
-    _->
-      Data = Log#log.data,
-      try
-        Rspp =  lager_format:format(Msg, Data,70000),
-        error_logger:error_msg("dd1 ~p, msg = ~p, data = ~p", [Rspp, Msg, Data]),
-        Rspp
-      catch E:R->
-        error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
-        []
-      end
+  Data = Log#log.data,
+  try
+   lager_format:format(Msg, Data,10000)
+  catch
+    error_logger:error_msg("log4erl, io_lib:format error ~p ~p ~p ~p", [E,R, Msg, Data]),
+    []
   end;
 %%  Data = Log#log.data,
 %%  try
